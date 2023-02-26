@@ -367,6 +367,56 @@ fn addLibcTopHalfIncludes(
         "-I",
         try comp.zig_lib_directory.join(arena, &[_][]const u8{
             "libc",
+            "wasix",
+            "libc-top-half",
+            "musl",
+            "src",
+            "internal",
+        }),
+
+        "-I",
+        try comp.zig_lib_directory.join(arena, &[_][]const u8{
+            "libc",
+            "wasix",
+            "libc-top-half",
+            "musl",
+            "src",
+            "misc",
+        }),
+
+        "-I",
+        try comp.zig_lib_directory.join(arena, &[_][]const u8{
+            "libc",
+            "wasix",
+            "libc-top-half",
+            "musl",
+            "src",
+            "time",
+        }),
+
+        "-I",
+        try comp.zig_lib_directory.join(arena, &[_][]const u8{
+            "libc",
+            "wasix",
+            "libc-top-half",
+            "musl",
+            "src",
+            "unistd",
+        }),
+
+        "-I",
+        try comp.zig_lib_directory.join(arena, &[_][]const u8{
+            "libc",
+            "wasix",
+            "libc-top-half",
+            "musl",
+            "src",
+            "linux",
+        }),
+
+        "-I",
+        try comp.zig_lib_directory.join(arena, &[_][]const u8{
+            "libc",
             "wasi",
             "libc-top-half",
             "musl",
@@ -491,6 +541,30 @@ const libc_bottom_half_src_files = [_][]const u8{
 };
 
 const libc_top_half_src_files = [_][]const u8{
+    "wasix/libc-top-half/musl/src/internal/syscall_ret.c",
+    "wasix/libc-top-half/musl/src/misc/getrlimit.c",
+    "wasix/libc-top-half/musl/src/misc/setrlimit.c",
+    "wasix/libc-top-half/musl/src/misc/getrusage.c",
+    "wasix/libc-top-half/musl/src/misc/syslog.c",
+    "wasix/libc-top-half/musl/src/time/times.c",
+    "wasix/libc-top-half/musl/src/time/gettimeofday.c",
+    "wasix/libc-top-half/musl/src/unistd/tcgetpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/tcsetpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/getpgid.c",
+    "wasix/libc-top-half/musl/src/unistd/getpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/setpgid.c",
+    "wasix/libc-top-half/musl/src/unistd/setpgrp.c",
+    "wasix/libc-top-half/musl/src/unistd/getsid.c",
+    "wasix/libc-top-half/musl/src/unistd/setsid.c",
+    "wasix/libc-top-half/musl/src/unistd/gethostname.c",
+    "wasix/libc-top-half/musl/src/unistd/alarm.c",
+    "wasix/libc-top-half/musl/src/unistd/ualarm.c",
+    "wasix/libc-top-half/musl/src/unistd/ttyname.c",
+    "wasix/libc-top-half/musl/src/unistd/ttyname_r.c",
+    "wasix/libc-top-half/musl/src/linux/wait3.c",
+    "wasix/libc-top-half/musl/src/linux/wait4.c",
+    "wasix/libc-top-half/musl/src/linux/eventfd.c",
+
     "wasi/libc-top-half/musl/src/misc/a64l.c",
     "wasi/libc-top-half/musl/src/misc/basename.c",
     "wasi/libc-top-half/musl/src/misc/dirname.c",
