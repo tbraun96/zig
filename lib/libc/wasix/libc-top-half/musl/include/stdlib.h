@@ -24,9 +24,13 @@ extern "C" {
 #endif
 
 #define __NEED_size_t
-#define __NEED_wchar_t
+//#define __NEED_wchar_t
 
 #include <bits/alltypes.h>
+
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
 
 int atoi (const char *);
 long atol (const char *);

@@ -10,7 +10,7 @@ extern "C" {
 #define __NEED_FILE
 #define __NEED___isoc_va_list
 #define __NEED_size_t
-#define __NEED_wchar_t
+//#define __NEED_wchar_t
 #define __NEED_wint_t
 #define __NEED_mbstate_t
 
@@ -19,6 +19,10 @@ extern "C" {
 #define __NEED_struct__IO_FILE
 #endif
 #endif
+
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
 
 #if defined(_POSIX_SOURCE) || defined(_POSIX_C_SOURCE) \
  || defined(_XOPEN_SOURCE) || defined(_GNU_SOURCE) || defined(_BSD_SOURCE)

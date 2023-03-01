@@ -1,8 +1,8 @@
-#ifndef _WASI_EMULATED_PROCESS_CLOCKS
-#error WASI lacks process-associated clocks; to enable emulation of the `getrusage` function using \
-the wall clock, which isn't sensitive to whether the program is running or suspended, \
-compile with -D_WASI_EMULATED_PROCESS_CLOCKS and link with -lwasi-emulated-process-clocks
-#else
+//#ifndef _WASI_EMULATED_PROCESS_CLOCKS
+//#error WASI lacks process-associated clocks; to enable emulation of the `getrusage` function using \
+//the wall clock, which isn't sensitive to whether the program is running or suspended, \
+//compile with -D_WASI_EMULATED_PROCESS_CLOCKS and link with -lwasi-emulated-process-clocks
+//#else
 #ifndef	_SYS_RESOURCE_H
 #define	_SYS_RESOURCE_H
 
@@ -127,4 +127,4 @@ __REDIR(getrusage, __getrusage_time64);
 #include <__struct_rusage.h>
 
 #endif
-#endif
+//#endif

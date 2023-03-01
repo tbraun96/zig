@@ -24,6 +24,10 @@ typedef const int * wctrans_t;
 
 #undef iswdigit
 
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
+
 int       iswalnum(wint_t);
 int       iswalpha(wint_t);
 int       iswblank(wint_t);

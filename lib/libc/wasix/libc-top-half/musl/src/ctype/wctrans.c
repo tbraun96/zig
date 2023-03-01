@@ -1,6 +1,10 @@
 #include <wctype.h>
 #include <string.h>
 
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
+
 wctrans_t wctrans(const char *class)
 {
 	if (!strcmp(class, "toupper")) return (wctrans_t)1;

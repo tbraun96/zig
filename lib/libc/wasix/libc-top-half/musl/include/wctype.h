@@ -16,6 +16,9 @@ extern "C" {
 #endif
 
 #include <bits/alltypes.h>
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
 
 typedef const int * wctrans_t;
 

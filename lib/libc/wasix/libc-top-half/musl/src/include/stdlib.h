@@ -3,6 +3,10 @@
 
 #include "../../include/stdlib.h"
 
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
+
 hidden int __putenv(char *, size_t, char *);
 hidden void __env_rm_add(char *, char *);
 hidden int __mkostemps(char *, int, int);

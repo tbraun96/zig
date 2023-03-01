@@ -8,6 +8,62 @@
 #include <string.h>
 #endif
 
+typedef uint8_t __wasi_bool_t;
+#define __WASI_BOOL_FALSE (UINT8_C(0))
+#define __WASI_BOOL_TRUE (UINT8_C(1))
+
+/**
+ * Rect that represents the TTY.
+ */
+typedef struct __wasi_tty_t {
+    /**
+     * Number of columns
+     */
+    uint32_t cols;
+
+    /**
+     * Number of rows
+     */
+    uint32_t rows;
+
+    /**
+     * Width of the screen in pixels
+     */
+    uint32_t width;
+
+    /**
+     * Height of the screen in pixels
+     */
+    uint32_t height;
+
+    /**
+     * Indicates if stdin is a TTY
+     */
+    __wasi_bool_t stdin_tty;
+
+    /**
+     * Indicates if stdout is a TTY
+     */
+    __wasi_bool_t stdout_tty;
+
+    /**
+     * Indicates if stderr is a TTY
+     */
+    __wasi_bool_t stderr_tty;
+
+    /**
+     * When enabled the TTY will echo input to console
+     */
+    __wasi_bool_t echo;
+
+    /**
+     * When enabled buffers the input until the return key is pressed
+     */
+    __wasi_bool_t line_buffered;
+
+} __wasi_tty_t;
+
+
 int ttyname_r(int fd, char *name, size_t size)
 {
 #ifdef __wasilibc_unmodified_upstream /* WASI has no ttyname */

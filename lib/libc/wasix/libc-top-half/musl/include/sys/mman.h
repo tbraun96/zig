@@ -1,7 +1,3 @@
-#ifndef _WASI_EMULATED_MMAN
-#error "WASI lacks a true mmap; to enable minimal mmap emulation, \
-compile with -D_WASI_EMULATED_MMAN and link with -lwasi-emulated-mman"
-#else
 #ifndef	_SYS_MMAN_H
 #define	_SYS_MMAN_H
 #ifdef __cplusplus
@@ -151,6 +147,5 @@ int shm_unlink (const char *);
 
 #ifdef __cplusplus
 }
-#endif
 #endif
 #endif
