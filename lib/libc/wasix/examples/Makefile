@@ -3,7 +3,7 @@ LLD_PATH=/prog/rust/build/x86_64-unknown-linux-gnu/lld/bin
 
 CFLAGS = --target=wasm32-wasmer-wasi \
          -O2 \
-         --sysroot ../../wasix-libc/sysroot32 \
+         -I /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include \
          -matomics \
          -mbulk-memory \
          -mmutable-globals \
