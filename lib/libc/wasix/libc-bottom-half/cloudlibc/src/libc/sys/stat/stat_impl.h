@@ -13,6 +13,9 @@
 #include <wasi/api.h>
 #include <stdbool.h>
 
+#define __WASI_FILETYPE_SOCKET_SEQPACKET (UINT8_C(9))
+#define __WASI_FILETYPE_SOCKET_RAW (UINT8_C(8))
+
 static_assert(S_ISBLK(S_IFBLK), "Value mismatch");
 static_assert(S_ISCHR(S_IFCHR), "Value mismatch");
 static_assert(S_ISDIR(S_IFDIR), "Value mismatch");

@@ -7,6 +7,9 @@
 #include <fcntl.h>
 #include <stdarg.h>
 
+#define F_DUPFD (5)
+#define F_DUPFD_CLOEXEC (6)
+
 int fcntl(int fildes, int cmd, ...) {
   switch (cmd) {
     case F_GETFD:

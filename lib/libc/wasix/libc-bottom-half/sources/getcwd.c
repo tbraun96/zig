@@ -1,6 +1,9 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <stdint.h>
+
+typedef uint64_t __wasi_pointersize_t;
 
 char *getcwd(char *buf, size_t size)
 {

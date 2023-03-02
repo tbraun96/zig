@@ -5,6 +5,36 @@
 #include <errno.h>
 #include <string.h>
 
+typedef uint16_t __wasi_riflags_t;
+#define SO_ONLYV6 (UINT8_C(5))
+#define TCP_NODELAY 1
+#define __WASI_RIFLAGS_RECV_DATA_TRUNCATED ((__wasi_riflags_t)(1 << 2))
+#define SO_NODELAY (UINT8_C(3))
+#define SO_ACCEPTCONN   0x1009
+#define SO_BROADCAST    0x0020
+#define SO_TYPE         3
+#define SO_DONTROUTE    5
+#define SO_OOBINLINE    10
+#define SO_REUSEPORT    15
+#define SO_REUSEADDR    0x0004
+#define SO_MCASTLOOPV4 (UINT8_C(7))
+#define SO_MCASTLOOPV6 (UINT8_C(8))
+#define SO_KEEPALIVE    9
+#define SO_RCVTIMEO     0x1006
+#define SO_ERROR        0x1007
+#define SO_LINGER       0x0080
+#define IPV6_V6ONLY 26
+#define SO_SNDTIMEO     0x1005
+#define SO_CONNTIMEO (UINT8_C(21))
+#define SO_ACCPTIMEO (UINT8_C(22))
+#define SO_SNDBUF (UINT8_C(16))
+#define SO_TTL (UINT8_C(23))
+#define SO_MCASTTTLV4 (UINT8_C(24))
+#define __WASI_FILETYPE_SOCKET_SEQPACKET (UINT8_C(9))
+#define __WASI_FILETYPE_SOCKET_RAW (UINT8_C(8))
+#define SO_RCVBUF 8
+#define SO_PROTOCOL 38
+
 int getsockopt(int socket, int level, int option_name,
                void *restrict option_value, socklen_t *restrict option_len) {
   if (level == IPPROTO_IPV6 && option_name == IPV6_V6ONLY) {
@@ -24,14 +54,15 @@ int getsockopt(int socket, int level, int option_name,
   switch (option_name) {
     case SO_ACCEPTCONN:
     case SO_BROADCAST:
-    case SO_DONTROUTE:
-    case SO_NODELAY:
+    // NOTE: commented out due to numeric duplication. TODO
+//    case SO_DONTROUTE:
+//    case SO_NODELAY:
     case SO_OOBINLINE:
-    case SO_ONLYV6:
+//    case SO_ONLYV6:
     case SO_REUSEPORT:
     case SO_REUSEADDR:
     case SO_MCASTLOOPV4:
-    case SO_MCASTLOOPV6:
+//    case SO_MCASTLOOPV6:
     case SO_KEEPALIVE: {
       __wasi_bool_t on = 0;
       __wasi_errno_t error = __wasi_sock_get_opt_flag(socket, option_name, &on);

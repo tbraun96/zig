@@ -12,6 +12,557 @@
 
 #include <wasi/api.h>
 #include <string.h>
+#include <stdint.h>
+
+typedef uint64_t __wasi_pointersize_t;
+typedef uint16_t __wasi_eventfdflags_t;
+typedef int __wasi_tid_t;
+typedef uint32_t __wasi_tl_key_t;
+typedef uint64_t __wasi_tl_val_t;
+typedef uint64_t __wasi_timestamp_t;
+typedef uint64_t __wasi_longsize_t;
+typedef uint8_t __wasi_signal_t;
+typedef int __wasi_pid_t;
+typedef uint32_t __wasi_bus_error_t;
+typedef uint8_t __wasi_stdio_mode_t;
+typedef uint8_t __wasi_bool_t;
+typedef int __wasi_bid_t;
+typedef uint8_t __wasi_bus_data_format_t;
+typedef uint64_t __wasi_cid_t;
+typedef int __wasi_fd_t;
+typedef uint8_t __wasi_stream_security_t;
+typedef uint8_t __wasi_sock_status_t;
+typedef uint8_t __wasi_address_family_t;
+typedef uint8_t __wasi_bus_event_type_t;
+typedef uint8_t __wasi_sock_type_t;
+typedef uint16_t __wasi_sock_proto_t;
+typedef uint8_t __wasi_sock_option_t;
+typedef uint16_t __wasi_ip_port_t;
+
+#define __WASI_BOOL_FALSE (UINT8_C(0))
+#define __WASI_BOOL_TRUE (UINT8_C(1))
+
+/**
+ * Represents the first 128 bits of a SHA256 hash
+ */
+typedef struct __wasi_hash_t {
+    /**
+     * First set of 64 bits
+     */
+    uint64_t b0;
+
+    /**
+     * second set of 64 bits
+     */
+    uint64_t b1;
+
+} __wasi_hash_t;
+
+/**
+ * Represents an optional call handle
+ */
+typedef union __wasi_option_cid_u_t {
+    uint8_t none;
+    __wasi_cid_t some;
+} __wasi_option_cid_u_t;
+typedef struct __wasi_option_cid_t {
+    uint8_t tag;
+    __wasi_option_cid_u_t u;
+} __wasi_option_cid_t;
+
+/**
+ * Bus process event.
+ */
+typedef struct __wasi_bus_event_exit_t {
+    /**
+     * Handle of the bus process that has exited
+     */
+    __wasi_bid_t bid;
+
+    /**
+     * Exit code of the bus process that has exited
+     */
+    __wasi_exitcode_t rval;
+
+} __wasi_bus_event_exit_t;
+
+/**
+ * Represents an invocation from a caller
+ */
+typedef struct __wasi_bus_event_call_t {
+    /**
+     * Parent handle if this is a part of a call stack
+     */
+    __wasi_option_cid_t parent;
+
+    /**
+     * Handle of the call
+     */
+    __wasi_cid_t cid;
+
+    /**
+     * Format of the data on the bus
+     */
+    __wasi_bus_data_format_t format;
+
+    /**
+     * Hash of the topic name that identifies this operation
+     */
+    __wasi_hash_t topic_hash;
+
+    /**
+     * File descriptor that holds the event data
+     */
+    __wasi_fd_t fd;
+
+} __wasi_bus_event_call_t;
+
+/**
+ * Represents the completion of an invocation from a caller
+ */
+typedef struct __wasi_bus_event_result_t {
+    /**
+     * Format of the data on the bus
+     */
+    __wasi_bus_data_format_t format;
+
+    /**
+     * Handle of the call
+     */
+    __wasi_cid_t cid;
+
+    /**
+     * File descriptor that holds the event data
+     */
+    __wasi_fd_t fd;
+
+} __wasi_bus_event_result_t;
+
+/**
+ * Bus event when an error occurs on a call.
+ */
+typedef struct __wasi_bus_event_fault_t {
+    /**
+     * Handle of the call where this event occurs for
+     */
+    __wasi_cid_t cid;
+
+    /**
+     * Fault that was raised against this call
+     */
+    __wasi_bus_error_t fault;
+
+} __wasi_bus_event_fault_t;
+
+/**
+ * Frees all the resources associated with a call.
+ */
+typedef struct __wasi_bus_event_close_t {
+    /**
+     * Handle of the call to release resources
+     */
+    __wasi_cid_t cid;
+
+} __wasi_bus_event_close_t;
+
+/**
+ * The contents of a `subscription`.
+ */
+typedef union __wasi_bus_event_u_t {
+    uint8_t noop;
+    __wasi_bus_event_exit_t exit;
+    __wasi_bus_event_call_t call;
+    __wasi_bus_event_result_t result;
+    __wasi_bus_event_fault_t fault;
+    __wasi_bus_event_close_t close;
+} __wasi_bus_event_u_t;
+typedef struct __wasi_bus_event_t {
+    uint8_t tag;
+    __wasi_bus_event_u_t u;
+} __wasi_bus_event_t;
+
+/**
+ * Represents an optional file descriptior
+ */
+typedef union __wasi_option_fd_u_t {
+    uint8_t none;
+    __wasi_fd_t some;
+} __wasi_option_fd_u_t;
+typedef struct __wasi_option_fd_t {
+    uint8_t tag;
+    __wasi_option_fd_u_t u;
+} __wasi_option_fd_t;
+
+/**
+ * Rect that represents the TTY.
+ */
+typedef struct __wasi_tty_t {
+    /**
+     * Number of columns
+     */
+    uint32_t cols;
+
+    /**
+     * Number of rows
+     */
+    uint32_t rows;
+
+    /**
+     * Width of the screen in pixels
+     */
+    uint32_t width;
+
+    /**
+     * Height of the screen in pixels
+     */
+    uint32_t height;
+
+    /**
+     * Indicates if stdin is a TTY
+     */
+    __wasi_bool_t stdin_tty;
+
+    /**
+     * Indicates if stdout is a TTY
+     */
+    __wasi_bool_t stdout_tty;
+
+    /**
+     * Indicates if stderr is a TTY
+     */
+    __wasi_bool_t stderr_tty;
+
+    /**
+     * When enabled the TTY will echo input to console
+     */
+    __wasi_bool_t echo;
+
+    /**
+     * When enabled buffers the input until the return key is pressed
+     */
+    __wasi_bool_t line_buffered;
+
+} __wasi_tty_t;
+
+/**
+ * Represents a snapshot of a point in time of the stack that can be restored later
+ */
+typedef struct __wasi_stack_snapshot_t {
+    /**
+     * User defined field that can be used by functions
+     */
+    uint64_t user;
+
+    /**
+     * Hash used to identify which stack snapshot to restore
+     */
+    __wasi_hash_t hash;
+
+} __wasi_stack_snapshot_t;
+
+/**
+ * Process handles.
+ */
+typedef struct __wasi_process_handles_t {
+    /**
+     * Handle that represents the process
+     */
+    __wasi_bid_t bid;
+
+    /**
+     * File handle for STDIN
+     */
+    __wasi_option_fd_t stdin;
+
+    /**
+     * File handle for STDOUT
+     */
+    __wasi_option_fd_t stdout;
+
+    /**
+     * File handle for STDERR
+     */
+    __wasi_option_fd_t stderr;
+
+} __wasi_process_handles_t;
+
+/**
+ * HTTP request handles used to send and receive data to the server
+ */
+typedef struct __wasi_http_handles_t {
+    /**
+     * File handle used to write the request data
+     */
+    __wasi_fd_t request;
+
+    /**
+     * File handle used to receive the response data
+     */
+    __wasi_fd_t response;
+
+    /**
+     * File handle used to read the response headers
+     * (entries are separated by line feeds)
+     */
+    __wasi_fd_t headers;
+
+} __wasi_http_handles_t;
+
+/**
+ * HTTP response status
+ */
+typedef struct __wasi_http_status_t {
+    __wasi_bool_t ok;
+
+    __wasi_bool_t redirected;
+
+    /**
+     * Size of the response
+     */
+    __wasi_filesize_t size;
+
+    /**
+     * HTTP status code for this response
+     */
+    uint16_t status;
+
+} __wasi_http_status_t;
+
+/**
+ * An IPv4 address is a 32-bit number that uniquely identifies a network interface on a machine.
+ */
+typedef struct __wasi_addr_ip4_t {
+    uint8_t n0;
+
+    uint8_t n1;
+
+    uint8_t h0;
+
+    uint8_t h1;
+
+} __wasi_addr_ip4_t;
+
+/**
+ * An IPv6 address is a 128-bit number that uniquely identifies a network interface on a machine.
+ */
+typedef struct __wasi_addr_ip6_t {
+    uint16_t n0;
+
+    uint16_t n1;
+
+    uint16_t n2;
+
+    uint16_t n3;
+
+    uint16_t h0;
+
+    uint16_t h1;
+
+    uint16_t h2;
+
+    uint16_t h3;
+
+} __wasi_addr_ip6_t;
+
+/**
+ * Represents an unspecified address
+ */
+typedef struct __wasi_addr_unspec_t {
+    uint8_t n0;
+
+} __wasi_addr_unspec_t;
+
+/**
+ * An unspecified address with a cidr
+ */
+typedef struct __wasi_addr_unspec_cidr_t {
+    __wasi_addr_unspec_t addr;
+
+    uint8_t prefix;
+
+} __wasi_addr_unspec_cidr_t;
+
+/**
+ * An IPv4 address CIDR
+ */
+typedef struct __wasi_addr_ip4_cidr_t {
+    __wasi_addr_ip4_t addr;
+
+    uint8_t prefix;
+
+} __wasi_addr_ip4_cidr_t;
+
+/**
+ * An IPv6 address CIDR
+ */
+typedef struct __wasi_addr_ip6_cidr_t {
+    __wasi_addr_ip6_t addr;
+
+    uint8_t prefix;
+
+} __wasi_addr_ip6_cidr_t;
+
+/**
+ * Unix socket that is bound to no more than 15 bytes
+ */
+typedef struct __wasi_addr_unix_t {
+    uint8_t b0;
+
+    uint8_t b1;
+
+    uint8_t b2;
+
+    uint8_t b3;
+
+    uint8_t b4;
+
+    uint8_t b5;
+
+    uint8_t b6;
+
+    uint8_t b7;
+
+    uint8_t b8;
+
+    uint8_t b9;
+
+    uint8_t b10;
+
+    uint8_t b11;
+
+    uint8_t b12;
+
+    uint8_t b13;
+
+    uint8_t b14;
+
+    uint8_t b15;
+
+} __wasi_addr_unix_t;
+
+/**
+ * A unix socket with a cidr
+ */
+typedef struct __wasi_addr_unix_cidr_t {
+    __wasi_addr_unix_t addr;
+
+    uint8_t prefix;
+
+} __wasi_addr_unix_cidr_t;
+
+/**
+ * Union that makes a generic IP address and prefix. a.k.a. CIDR
+ */
+typedef union __wasi_addr_cidr_u_t {
+    __wasi_addr_unspec_cidr_t unspec;
+    __wasi_addr_ip4_cidr_t inet4;
+    __wasi_addr_ip6_cidr_t inet6;
+    __wasi_addr_unix_cidr_t unix;
+} __wasi_addr_cidr_u_t;
+
+typedef struct __wasi_addr_cidr_t {
+    uint8_t tag;
+    __wasi_addr_cidr_u_t u;
+} __wasi_addr_cidr_t;
+
+/**
+ * Union of all possible addresses type
+ */
+typedef union __wasi_addr_u_t {
+    __wasi_addr_unspec_t unspec;
+    __wasi_addr_ip4_t inet4;
+    __wasi_addr_ip6_t inet6;
+    __wasi_addr_unix_t unix;
+} __wasi_addr_u_t;
+
+typedef struct __wasi_addr_t {
+    uint8_t tag;
+    __wasi_addr_u_t u;
+} __wasi_addr_t;
+
+/**
+ * Hardware address (MAC)
+ */
+typedef struct __wasi_hardware_address_t {
+    uint8_t n0;
+
+    uint8_t n1;
+
+    uint8_t n2;
+
+    uint8_t h0;
+
+    uint8_t h1;
+
+    uint8_t h2;
+
+} __wasi_hardware_address_t;
+
+typedef struct __wasi_route_t {
+    __wasi_addr_cidr_t cidr;
+
+    __wasi_addr_t via_router;
+
+    __wasi_option_timestamp_t preferred_until;
+
+    __wasi_option_timestamp_t expires_at;
+
+} __wasi_route_t;
+
+/**
+ * An unspecified address with a port
+ */
+typedef struct __wasi_addr_unspec_port_t {
+    __wasi_ip_port_t port;
+
+    __wasi_addr_unspec_t addr;
+
+} __wasi_addr_unspec_port_t;
+
+/**
+ * An IPv4 address with a port number
+ */
+typedef struct __wasi_addr_ip4_port_t {
+    __wasi_ip_port_t port;
+
+    __wasi_addr_ip4_t addr;
+
+} __wasi_addr_ip4_port_t;
+
+/**
+ * A unix socket with a port
+ */
+typedef struct __wasi_addr_unix_port_t {
+    __wasi_ip_port_t port;
+
+    __wasi_addr_unix_t addr;
+
+} __wasi_addr_unix_port_t;
+
+/**
+ * An IPv6 address with a port number
+ */
+typedef struct __wasi_addr_ip6_port_t {
+    __wasi_ip_port_t port;
+
+    __wasi_addr_ip6_t addr;
+
+} __wasi_addr_ip6_port_t;
+
+/**
+ * Union that makes a generic IP address and port
+ */
+typedef union __wasi_addr_port_u_t {
+    __wasi_addr_unspec_port_t unspec;
+    __wasi_addr_ip4_port_t inet4;
+    __wasi_addr_ip6_port_t inet6;
+    __wasi_addr_unix_port_t unix;
+} __wasi_addr_port_u_t;
+
+typedef struct __wasi_addr_port_t {
+    uint8_t tag;
+    __wasi_addr_port_u_t u;
+} __wasi_addr_port_t;
 
 int32_t __imported_wasix_64v1_args_get(int64_t arg0, int64_t arg1) __attribute__((
     __import_module__("wasix_64v1"),
@@ -273,15 +824,6 @@ int32_t __imported_wasix_64v1_fd_prestat_dir_name(int32_t arg0, int64_t arg1, in
     __import_name__("fd_prestat_dir_name")
 ));
 
-__wasi_errno_t __wasi_fd_prestat_dir_name(
-    __wasi_fd_t fd,
-    uint8_t * path,
-    __wasi_pointersize_t path_len
-){
-    int32_t ret = __imported_wasix_64v1_fd_prestat_dir_name((int32_t) fd, (int64_t) path, (int64_t) path_len);
-    return (uint16_t) ret;
-}
-
 int32_t __imported_wasix_64v1_fd_pwrite(int32_t arg0, int64_t arg1, int64_t arg2, int64_t arg3, int64_t arg4) __attribute__((
     __import_module__("wasix_64v1"),
     __import_name__("fd_pwrite")
@@ -317,17 +859,6 @@ int32_t __imported_wasix_64v1_fd_readdir(int32_t arg0, int64_t arg1, int64_t arg
     __import_module__("wasix_64v1"),
     __import_name__("fd_readdir")
 ));
-
-__wasi_errno_t __wasi_fd_readdir(
-    __wasi_fd_t fd,
-    uint8_t * buf,
-    __wasi_pointersize_t buf_len,
-    __wasi_dircookie_t cookie,
-    __wasi_size_t *retptr0
-){
-    int32_t ret = __imported_wasix_64v1_fd_readdir((int32_t) fd, (int64_t) buf, (int64_t) buf_len, (int64_t) cookie, (intptr_t) retptr0);
-    return (uint16_t) ret;
-}
 
 int32_t __imported_wasix_64v1_fd_renumber(int32_t arg0, int32_t arg1) __attribute__((
     __import_module__("wasix_64v1"),
@@ -528,18 +1059,6 @@ int32_t __imported_wasix_64v1_path_readlink(int32_t arg0, int64_t arg1, int64_t 
     __import_name__("path_readlink")
 ));
 
-__wasi_errno_t __wasi_path_readlink(
-    __wasi_fd_t fd,
-    const char *path,
-    uint8_t * buf,
-    __wasi_pointersize_t buf_len,
-    __wasi_size_t *retptr0
-){
-    size_t path_len = strlen(path);
-    int32_t ret = __imported_wasix_64v1_path_readlink((int32_t) fd, (intptr_t) path, (intptr_t) path_len, (int64_t) buf, (int64_t) buf_len, (intptr_t) retptr0);
-    return (uint16_t) ret;
-}
-
 int32_t __imported_wasix_64v1_path_remove_directory(int32_t arg0, int64_t arg1, int64_t arg2) __attribute__((
     __import_module__("wasix_64v1"),
     __import_name__("path_remove_directory")
@@ -632,14 +1151,6 @@ int32_t __imported_wasix_64v1_random_get(int64_t arg0, int64_t arg1) __attribute
     __import_module__("wasix_64v1"),
     __import_name__("random_get")
 ));
-
-__wasi_errno_t __wasi_random_get(
-    uint8_t * buf,
-    __wasi_pointersize_t buf_len
-){
-    int32_t ret = __imported_wasix_64v1_random_get((int64_t) buf, (int64_t) buf_len);
-    return (uint16_t) ret;
-}
 
 int32_t __imported_wasix_64v1_tty_get(int64_t arg0) __attribute__((
     __import_module__("wasix_64v1"),
@@ -1664,16 +2175,6 @@ int32_t __imported_wasix_64v1_sock_accept(int32_t arg0, int32_t arg1, int64_t ar
     __import_module__("wasix_64v1"),
     __import_name__("sock_accept")
 ));
-
-__wasi_errno_t __wasi_sock_accept(
-    __wasi_fd_t fd,
-    __wasi_fdflags_t flags,
-    __wasi_fd_t *retptr0,
-    __wasi_addr_port_t *retptr1
-){
-    int32_t ret = __imported_wasix_64v1_sock_accept((int32_t) fd, flags, (intptr_t) retptr0, (intptr_t) retptr1);
-    return (uint16_t) ret;
-}
 
 int32_t __imported_wasix_64v1_sock_connect(int32_t arg0, int64_t arg1) __attribute__((
     __import_module__("wasix_64v1"),
