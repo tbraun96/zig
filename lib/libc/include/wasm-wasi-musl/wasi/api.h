@@ -30,6 +30,32 @@
 #include <stddef.h>
 #include <stdint.h>
 
+typedef uint8_t __wasi_bool_t;
+#define __WASI_BOOL_FALSE (UINT8_C(0))
+#define __WASI_BOOL_TRUE (UINT8_C(1))
+#define __WASI_OPTION_NONE (UINT8_C(0))
+#define __WASI_OPTION_SOME (UINT8_C(1))
+
+typedef uint16_t __wasi_riflags_t;
+#define __WASI_RIFLAGS_RECV_DATA_TRUNCATED ((__wasi_riflags_t)(1 << 2))
+
+/**
+ * Timestamp in nanoseconds.
+ */
+typedef uint64_t __wasi_timestamp_t;
+
+/**
+ * Represents an optional timestamp
+ */
+typedef union __wasi_option_timestamp_u_t {
+    uint8_t none;
+    __wasi_timestamp_t some;
+} __wasi_option_timestamp_u_t;
+typedef struct __wasi_option_timestamp_t {
+    uint8_t tag;
+    __wasi_option_timestamp_u_t u;
+} __wasi_option_timestamp_t;
+
 _Static_assert(_Alignof(int8_t) == 1, "non-wasi data layout");
 _Static_assert(_Alignof(uint8_t) == 1, "non-wasi data layout");
 _Static_assert(_Alignof(int16_t) == 2, "non-wasi data layout");

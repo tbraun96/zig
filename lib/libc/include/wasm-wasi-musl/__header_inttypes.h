@@ -10,6 +10,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+typedef uint32_t wchar_t;
+typedef wchar_t wint_t;
+
 typedef struct { intmax_t quot, rem; } imaxdiv_t;
 
 intmax_t  imaxabs(intmax_t);

@@ -23,8 +23,6 @@
 
 #define SOL_SOCKET 0x7fffffff
 
-#define SO_TYPE 3
-
 #define AF_UNSPEC 0
 #define AF_INET 1
 #define AF_INET6 2
