@@ -6,6 +6,8 @@
 #include <time.h>
 #include <unistd.h>
 
+typedef unsigned int useconds_t;
+
 int usleep(useconds_t useconds) {
   struct timespec ts = {.tv_sec = useconds / 1000000,
                         .tv_nsec = useconds % 1000000 * 1000};

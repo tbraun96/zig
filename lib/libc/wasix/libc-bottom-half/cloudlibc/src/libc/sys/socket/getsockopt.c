@@ -90,7 +90,10 @@ int getsockopt(int socket, int level, int option_name,
         return -1;
       }
 
-      struct linger linger;
+        struct linger {
+            int l_onoff;
+            int l_linger;
+        } linger;
       linger.l_onoff = tm.tag == __WASI_OPTION_SOME ? 1 : 0;
       linger.l_linger = tm.u.some / 1000000000ULL;
       memcpy(option_value, &linger, *option_len < sizeof(struct linger) ? *option_len : sizeof(struct linger));

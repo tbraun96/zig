@@ -11,4 +11,4 @@ noreturn void _Exit(int status) {
   __wasi_proc_exit(status);
 }
 
-__strong_reference(_Exit, _exit);
+//__strong_reference(_Exit, _exit);

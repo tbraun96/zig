@@ -302,6 +302,15 @@ fn addLibcBottomHalfIncludes(
             "libc",
             "wasix",
             "libc-bottom-half",
+            "headers",
+            "public",
+        }),
+
+        "-I",
+        try comp.zig_lib_directory.join(arena, &[_][]const u8{
+            "libc",
+            "wasix",
+            "libc-bottom-half",
             "cloudlibc",
             "src",
             "include",
@@ -518,6 +527,7 @@ const libc_bottom_half_src_files = [_][]const u8{
     "wasix/libc-bottom-half/sources/__wasilibc_rmdirat.c",
     "wasix/libc-bottom-half/sources/__wasilibc_tell.c",
     "wasix/libc-bottom-half/sources/__wasilibc_unlinkat.c",
+    "wasix/libc-bottom-half/sources/__original_main.c",
     "wasix/libc-bottom-half/sources/abort.c",
 //    "wasix/libc-bottom-half/sources/accept.c",
     "wasix/libc-bottom-half/sources/at_fdcwd.c",

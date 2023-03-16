@@ -129,8 +129,9 @@ int __wasilibc_nocwd_scandirat(int dirfd, const char *dir, struct dirent ***name
   // Sort results and return them.
   free(buffer);
   close(fd);
-  (qsort)(dirents, dirents_used, sizeof(*dirents),
-          (int (*)(const void *, const void *))compar);
+  // TODO: add qsort impl
+  /*(qsort)(dirents, dirents_used, sizeof(*dirents),
+          (int (*)(const void *, const void *))compar);*/
   *namelist = dirents;
   return dirents_used;
 
